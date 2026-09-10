@@ -181,9 +181,6 @@ export async function fetchPortfolio(names: string[]): Promise<PortfolioSnapshot
       continue;
     }
     const own = amount(a.vesting_shares);
-    const delegated = amount(a.delegated_vesting_shares);
-    const received = amount(a.received_vesting_shares);
-    const effectiveVests = own - delegated + received;
 
     const votingPower = manabarPercent(a.voting_manabar, own * 1e6, now);
 
@@ -196,7 +193,8 @@ export async function fetchPortfolio(names: string[]): Promise<PortfolioSnapshot
     const hiveSavings = amount(a.savings_balance);
     const hbd = amount(a.hbd_balance);
     const hbdSavings = amount(a.savings_hbd_balance);
-    const hivePower = vestsToHp(effectiveVests);
+    // Own staked HP only — delegations in or out don't count toward account value.
+    const hivePower = vestsToHp(own);
     const rewardHive = amount(a.reward_hive_balance);
     const rewardHbd = amount(a.reward_hbd_balance);
     const rewardHp = amount(a.reward_vesting_hive);
