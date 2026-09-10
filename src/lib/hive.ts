@@ -225,8 +225,9 @@ export async function fetchPortfolio(names: string[]): Promise<PortfolioSnapshot
 
   const totals = accounts.reduce(
     (acc, a) => ({
-      hive: acc.hive + a.hive,
-      hbd: acc.hbd + a.hbd,
+      // Totals include savings so the headline matches the USD value.
+      hive: acc.hive + a.hive + a.hiveSavings,
+      hbd: acc.hbd + a.hbd + a.hbdSavings,
       hivePower: acc.hivePower + a.hivePower,
       hiveSavings: acc.hiveSavings + a.hiveSavings,
       hbdSavings: acc.hbdSavings + a.hbdSavings,
