@@ -181,8 +181,13 @@ export async function fetchPortfolio(names: string[]): Promise<PortfolioSnapshot
       continue;
     }
     const own = amount(a.vesting_shares);
+    const delegatedOut = amount(a.delegated_vesting_shares);
+    const receivedIn = amount(a.received_vesting_shares);
+    // Voting mana is sized on effective vests (own - delegated out + received in),
+    // even though account value only counts own stake.
+    const effectiveVests = Math.max(0, own - delegatedOut + receivedIn);
 
-    const votingPower = manabarPercent(a.voting_manabar, own * 1e6, now);
+    const votingPower = manabarPercent(a.voting_manabar, effectiveVests * 1e6, now);
 
     const rcEntry = rcByName.get(name);
     const rcPercent = rcEntry
